@@ -3,9 +3,6 @@
 #include <cmath>
 
 #include "cell.h"
-#include "search.h"
-#include "searchAlgorithms.h"
-#include "searchFactory.h"
 
 // mingw32-make.exe
 
@@ -33,24 +30,12 @@ Color obstacle_color = Color(255, 255, 0);
 Color frontier_color = Color(255, 0, 255);
 Color path_color = Color(0, 255, 255);
 
-SearchAlgorithm search_algo = SearchAlgorithm::AStar;
 
 int main(){
-
-    SearchFactory factory;
 
     vector<float> mousePosition;
 
     vector<vector<Cell*>> cells;
-
-    vector<string> implementedAlgorithms = {"Breadth First Search", "Depth First Search", "A* Search"};
-
-    // SEARCH ALGO MENU RENDER WINDOW
-    // =======================================================================
-    int menuItemHeight = 50;
-    int menuWindowWidth = 300;
-
-    // =======================================================================
 
     // fill state space 
     for (int row = 0; row < WIDTH; row ++){
@@ -69,9 +54,7 @@ int main(){
         cells.push_back(column);
     }
 
-    Search* search;
-
-    bool searching = false;
+    bool iterating = false;
 
     int iteration = 0;
 
@@ -98,7 +81,7 @@ int main(){
 
         mousePosition = {float(Mouse::getPosition(renderWindow).x), float(Mouse::getPosition(renderWindow).y)};
 
-        if (!searching && !search->isSearchComplete()){
+        if (!iterating && !search->isSearchComplete()){
             if (Mouse::isButtonPressed(Mouse::Left)){       // set as obstacle
                 int row = mousePosition[0] / CELL_SIZE;
                 int col = mousePosition[1] / CELL_SIZE;
