@@ -34,7 +34,7 @@ int main(){
   iterationText.setFont(font);
   iterationText.setCharacterSize(30);
   
-  std::vector<int> rulesList = {1, 4, 5, 2};
+  std::vector<int> rulesList = {1, 0, 5, 1};
   queue<int> rules;
   for (int rule : rulesList) {
     rules.push(rule);
@@ -89,9 +89,9 @@ int main(){
 
     iterationText.setString("Iteration: " + to_string(iteration));
     renderWindow.draw(iterationText);
-    renderWindow.display();
-
     environment.draw();
+
+    renderWindow.display();
   }
 
   return 0;

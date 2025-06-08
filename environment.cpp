@@ -69,8 +69,8 @@ void Environment::draw() {
       _getVertex(nextNode)
     };
 
-    /*std::cout << _getVertex(prevNode).position.x << ", " << _getVertex(prevNode).position.y << "\n";*/
-    /*std::cout << _getVertex(nextNode).position.x << ", " << _getVertex(nextNode).position.y << "\n\n";*/
+    std::cout << _getVertex(prevNode).position.x << ", " << _getVertex(prevNode).position.y << "\n";
+    std::cout << _getVertex(nextNode).position.x << ", " << _getVertex(nextNode).position.y << "\n\n";
     _renderWindow.draw(line, 2, sf::Lines);
   }
 }
