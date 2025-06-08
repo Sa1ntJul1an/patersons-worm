@@ -4,6 +4,7 @@
 #include <set>
 #include <string>
 
+#include "directionUtils.h"
 #include "node.h"
 
 Worm::Worm(Node* initialNode,  int initialDirection, std::queue<int> rules) {
@@ -34,16 +35,6 @@ int Worm::chooseDirection() {
   int direction;
 
   std::cout << "Position: {" << std::to_string(_currentNode->getPosition().first) << ", " << std::to_string(_currentNode->getPosition().second) << "}\n";
-
-  std::string output = "Configuration: {";
-  for (int dir : nodeConfiguration) {
-    output += std::to_string(dir);
-    output += ", ";
-  }
-  output.pop_back();
-  output.pop_back();
-  output += "}";
-  std::cout << output << "\n";
 
   if (nodeConfiguration.size() == 5) {   // implicit rule of Paterson's worm: if there is only 1 possible way out, take that path and do not consume rule
     for (int i = 0; i <= 5; i++) {
@@ -77,6 +68,8 @@ int Worm::chooseDirection() {
     } else {                    // we have seen this config before, grab the direction from mapped rules
       direction = _ruleMap[nodeConfiguration];
     }
+    std::cout << "input direction: " << direction << ", current direction: " << _currentDirection << "\n";
+    direction = DirectionUtils::transformDirectionRelativeToGlobal(direction, _currentDirection);
 
     if (_currentNode->isEaten(direction)) {   // if our chosen rule says to take a path that is eaten, automaton halts
       _halted = true;
@@ -86,6 +79,9 @@ int Worm::chooseDirection() {
     }
   }
 
+  std::cout << "output direction: " << direction << "\n";
+
+  _currentDirection = direction;
   return direction;
 }
 

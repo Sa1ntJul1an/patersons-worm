@@ -28,11 +28,19 @@ namespace DirectionUtils {
   
   /**
    * @brief Transforms the direction by a given input direction, returning the direction transformed to the relative coordinate frame.
+   * @param `input_direction` Integer representing the current direction before transformation.
+   * @param `transform_direction` Integer representing the direction of the relative coordinate frame.
+   * @returns Integer representing the transformed direction [0, 5] found after the rotation is performed.
+  **/
+  const int transformDirectionGlobalToRelative(const int input_direction, const int transform_direction);
+  
+  /**
+   * @brief Transforms the direction by a given input direction, returning the direction transformed to the global coordinate frame.
    * @param `current_direction` Integer representing the current direction before transformation.
    * @param `transform_direction` Integer representing the direction of the relative coordinate frame.
    * @returns Integer representing the transformed direction [0, 5] found after the rotation is performed.
   **/
-  const int transformDirection(const int current_direction, const int transform_direction);
+  const int transformDirectionRelativeToGlobal(const int input_direction, const int transform_direction);
 }
 
 #endif // !DIRECTIONUTILS_HEADER

@@ -19,7 +19,8 @@ Environment::Environment(sf::RenderWindow& renderWindow, Worm* worm) : _renderWi
   _allNodes.insert(initNode);
 
   // create node traveled from for initial state based on initial direction (node will be in direction opposite worm's current direction)
-  Node* traveledFromNode = new Node(_getNewCoords(initNode->getPosition(), DirectionUtils::invertDirection(_worm->getCurrentDirection())));
+  std::pair<int, int> traveledFromCoords = _getNewCoords(initNode->getPosition(), DirectionUtils::invertDirection(_worm->getCurrentDirection()));
+  Node* traveledFromNode = _getNode(traveledFromCoords);
   initNode->addEaten(traveledFromNode);
   _visitedNodes.push_back(_worm->getCurrentNode());
 }
@@ -34,7 +35,7 @@ Environment::~Environment() {
 
 void Environment::update() {
   int direction = _worm->chooseDirection();
-  std::cout << "chosen direction " << std::to_string(direction) << "\n";
+  std::cout << "chosen global direction " << std::to_string(direction) << "\n";
   if (direction < 0) {
     // sim has halted
     std::cout << "Sim halted.\n";
@@ -87,11 +88,13 @@ std::pair<int, int> Environment::_getNewCoords(std::pair<int, int> currentCoords
 
 Node* Environment::_getNode(std::pair<int, int> coords) {
   if (_nodesMap.find(coords) != _nodesMap.end()) {      // if we have already created a node at these indices, retrieve it from the map
+    std::cout << "previously seen node\n";
     return _nodesMap[coords];
   }
 
   // else, this node does not yet exist in this map (we have never visited it).  Need to create a new one
   Node* node = new Node(coords);
+  _nodesMap[coords] = node;
   return node;
 }
 

@@ -62,9 +62,9 @@ namespace DirectionUtils {
     return directionToDeltaPosMap.at(direction);
   }
   
-  const int transformDirection(const int current_direction, const int transform_direction) {
+  const int transformDirectionGlobalToRelative(const int input_direction, const int transform_direction) {
     // return -1 for bad inputs
-    if (current_direction > 5 || current_direction < 0) {
+    if (input_direction > 5 || input_direction < 0) {
       return -1;
     }
     if (transform_direction > 5 || transform_direction < 0) {
@@ -72,14 +72,31 @@ namespace DirectionUtils {
     }
 
     // if the current direction is greater than or equal to the transform direction, we can simply subtract current from transform to transform it
-    if (current_direction >= transform_direction) {
-      return current_direction - transform_direction;
+    if (input_direction >= transform_direction) {
+      return input_direction - transform_direction;
     }
     
     // - if the current direction is lesser than the transform direction, we have to underflow as directions below 0 wrap around beginning at 5. 
     // - this logic handles that
-    int delta = transform_direction - current_direction;
+    int delta = transform_direction - input_direction;
     return 6 - delta;
   }
+  
+  const int transformDirectionRelativeToGlobal(const int input_direction, const int transform_direction) {
+    // return -1 for bad inputs
+    if (input_direction > 5 || input_direction < 0) {
+      return -1;
+    }
+    if (transform_direction > 5 || transform_direction < 0) {
+      return -1;
+    }
 
+    int direction = input_direction + transform_direction;
+    
+    if (direction > 5) {
+      return direction - 5;
+    }
+
+    return direction;
+  }
 }
