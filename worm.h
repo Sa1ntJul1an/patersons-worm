@@ -1,21 +1,36 @@
 #ifndef WORM_HEADER
 #define WORM_HEADER 
 
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <exception>
+#include <map>
+#include <queue>
+#include <set>
 #include <vector>
 
 #include "node.h"
 
 class Worm {
   public:
-    Worm(sf::RenderWindow& renderWindow, std::vector<Node> nodes);
-
-    void update();
+    Worm(Node* initialNode, int initialDirection, std::queue<int> rules);
+    Node* getCurrentNode();
+    int getCurrentDirection();
+    int chooseDirection();
+    void moveToNode(Node* node);
 
   private:
-    sf::RenderWindow& _renderWindow;
+    std::set<int> _mapConfiguration(int currentDirection);
 
-    bool _starved;
+    Node* _currentNode;
+
+    std::queue<int> _rules;
+    std::map<std::set<int>, int> _ruleMap;
+
+    int _currentDirection;
+
+    bool _halted;           // halted for ANY reason (starved, bad rule, no more rules)
+    bool _impossible_path;  // impossible path (next rule requires move that is already eaten)
+    bool _starved;          // starved (no possible paths)
+    bool _n_type;           // n-type: no more rules but we have encountered new config (need longer ruleset)
 };
 
 #endif // !WORM_HEADER
