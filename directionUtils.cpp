@@ -94,7 +94,7 @@ namespace DirectionUtils {
     int direction = input_direction + transform_direction;
     
     if (direction > 5) {
-      return direction - 5;
+      return direction - 6;
     }
 
     return direction;

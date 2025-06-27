@@ -5,7 +5,6 @@
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <iostream>
-#include <string>
 #include <vector>
 #include <utility>
 #include "directionUtils.h"
@@ -22,6 +21,7 @@ Environment::Environment(sf::RenderWindow& renderWindow, Worm* worm) : _renderWi
   std::pair<int, int> traveledFromCoords = _getNewCoords(initNode->getPosition(), DirectionUtils::invertDirection(_worm->getCurrentDirection()));
   Node* traveledFromNode = _getNode(traveledFromCoords);
   initNode->addEaten(traveledFromNode);
+  _visitedNodes.push_back(traveledFromNode);
   _visitedNodes.push_back(_worm->getCurrentNode());
 }
 
@@ -35,7 +35,7 @@ Environment::~Environment() {
 
 void Environment::update() {
   int direction = _worm->chooseDirection();
-  std::cout << "chosen global direction " << std::to_string(direction) << "\n";
+  /*std::cout << "chosen global direction " << std::to_string(direction) << "\n";*/
   if (direction < 0) {
     // sim has halted
     std::cout << "Sim halted.\n";
@@ -69,8 +69,6 @@ void Environment::draw() {
       _getVertex(nextNode)
     };
 
-    std::cout << _getVertex(prevNode).position.x << ", " << _getVertex(prevNode).position.y << "\n";
-    std::cout << _getVertex(nextNode).position.x << ", " << _getVertex(nextNode).position.y << "\n\n";
     _renderWindow.draw(line, 2, sf::Lines);
   }
 }
@@ -88,7 +86,6 @@ std::pair<int, int> Environment::_getNewCoords(std::pair<int, int> currentCoords
 
 Node* Environment::_getNode(std::pair<int, int> coords) {
   if (_nodesMap.find(coords) != _nodesMap.end()) {      // if we have already created a node at these indices, retrieve it from the map
-    std::cout << "previously seen node\n";
     return _nodesMap[coords];
   }
 
@@ -101,13 +98,24 @@ Node* Environment::_getNode(std::pair<int, int> coords) {
 // convert node coordinates to pixel coordinates
 sf::Vertex Environment::_getVertex(Node* node) {
   std::pair<int, int> nodeCoords = node->getPosition();
-  sf::Vector2f globalCoords = sf::Vector2f(nodeCoords.first * _lineLength, nodeCoords.second * _triangleHeight);
-  if (nodeCoords.second % 2 != 0) {     // shift odd rows over half of triangle side length
-    globalCoords.x += _lineLength / 2.0;
-  }
+  
+  float x_base = _lineLength * (static_cast<float>(nodeCoords.first) + 0.5f * nodeCoords.second);
+  float y_base = _triangleHeight * nodeCoords.second;
 
-  globalCoords.x += _renderWindow.getSize().x / 2.0;
-  globalCoords.y = (_renderWindow.getSize().y / 2.0) - globalCoords.y;
+  sf::Vector2f globalCoords = sf::Vector2f(x_base, y_base);
+
+  // center on render window 
+  globalCoords.x += _renderWindow.getSize().x / 2.0f;
+  globalCoords.y = (_renderWindow.getSize().y / 2.0f) - globalCoords.y;
 
   return sf::Vertex(globalCoords, _lineColor);
+
+  /*sf::Vector2f globalCoords = sf::Vector2f(nodeCoords.first * _lineLength, nodeCoords.second * _triangleHeight);*/
+  /*if (nodeCoords.second & 1) {     // shift odd rows over half of triangle side length*/
+  /*  globalCoords.x += _lineLength / 2.0;*/
+  /*}*/
+  /**/
+  /*globalCoords.x += _renderWindow.getSize().x / 2.0;*/
+  /*globalCoords.y = (_renderWindow.getSize().y / 2.0) - globalCoords.y;*/
+  /**/
 }

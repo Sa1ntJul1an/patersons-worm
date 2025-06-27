@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <cmath>
 #include <queue>
 #include <string>
@@ -17,9 +18,12 @@ int main(){
   bool iterating = false;
   int iteration = 0;
 
+  const int RENDER_WIDTH = 1000;
+  const int RENDER_HEIGHT = 700;
+
   // SEARCH RENDER WINDOW
   // =======================================================================
-  RenderWindow renderWindow(VideoMode(1000, 700), "Search Algorithm");
+  RenderWindow renderWindow(VideoMode(RENDER_WIDTH, RENDER_HEIGHT), "Paterson's Worm");
   renderWindow.setFramerateLimit(60);
   // =======================================================================
 
@@ -33,8 +37,21 @@ int main(){
   iterationText.setPosition(10, 10);
   iterationText.setFont(font);
   iterationText.setCharacterSize(30);
+
+  Text haltedText;
+  haltedText.setFillColor(Color::Black);
+  haltedText.setFont(font);
+  haltedText.setCharacterSize(100);
   
-  std::vector<int> rulesList = {1, 0, 5, 1};
+  FloatRect textRect;
+
+  Color simRunningBackgroundColor = Color::Black;
+  Color simHaltedBackgroundColor = Color(120, 0, 0);
+  Color backgroundColor = Color::Black;
+
+  /*std::vector<int> rulesList = {1, 0, 5, 1};*/
+  /*std::vector<int> rulesList = {1, 0, 4, 0, 1, 5};*/
+  std::vector<int> rulesList = {1, 0, 4, 0, 1, 0, 1};
   queue<int> rules;
   for (int rule : rulesList) {
     rules.push(rule);
@@ -66,7 +83,7 @@ int main(){
     // ==========================================================
 
     // update iteration here 
-    if (iterating) {
+    if (iterating && !worm->isHalted()) {
       environment.update();
       iteration++;
     }
@@ -85,8 +102,25 @@ int main(){
 
     // DRAW
     // ==========================================================
-    renderWindow.clear();
-
+    renderWindow.clear(backgroundColor);
+    
+    if (worm->isHalted()) {
+      backgroundColor = simHaltedBackgroundColor;
+      if (worm->isStarved()) {
+        haltedText.setString("Worm Starved");
+      } else if (worm->isNType()) {
+        haltedText.setString("N-Type Worm");
+      } else if (worm->isImpossiblePath()) {
+        haltedText.setString("Impossible Path");
+      }
+      textRect = haltedText.getLocalBounds();
+      haltedText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+      haltedText.setPosition(RENDER_WIDTH / 2.0f, RENDER_HEIGHT / 4.0f);
+      renderWindow.draw(haltedText);
+    } else {
+      backgroundColor = simRunningBackgroundColor;
+    }
+    
     iterationText.setString("Iteration: " + to_string(iteration));
     renderWindow.draw(iterationText);
     environment.draw();

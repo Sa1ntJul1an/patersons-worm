@@ -1,7 +1,5 @@
 #include "node.h"
 
-#include <iostream>
-#include <string>
 #include <utility>
 #include <set>
 #include "directionUtils.h"
@@ -15,17 +13,6 @@ std::pair<int, int> Node::getPosition() const {
 }
 
 std::set<int> Node::getConfiguration(int transform_direction) {
-  std::cout << "Transforming configuration. Input direction: " << transform_direction << "\n";
-  std::string output = "Global configuration: {";
-  for (int dir : _configuration) {
-    output += std::to_string(dir);
-    output += ", ";
-  }
-  output.pop_back();
-  output.pop_back();
-  output += "}";
-  std::cout << output << "\n";
-  
   if (transform_direction == 0) {
     return _configuration;
   }
@@ -33,16 +20,6 @@ std::set<int> Node::getConfiguration(int transform_direction) {
   for (int eaten_direction : _configuration) {
     transformedConfiguration.insert(DirectionUtils::transformDirectionGlobalToRelative(eaten_direction, transform_direction));
   }
-
-  output = "Relative configuration: {";
-  for (int dir : transformedConfiguration) {
-    output += std::to_string(dir);
-    output += ", ";
-  }
-  output.pop_back();
-  output.pop_back();
-  output += "}";
-  std::cout << output << "\n";
   return transformedConfiguration;
 }
 
@@ -62,7 +39,6 @@ void Node::addEaten(Node* neighbor) {
   // the neighbor now has the path in the "opposite" direction marked as eaten
   neighbor->addEaten(DirectionUtils::invertDirection(direction));
 
-  std::cout << "adding eaten direction: " << direction << "\n";
   _configuration.insert(direction);
 }
 

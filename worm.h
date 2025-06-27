@@ -16,6 +16,10 @@ class Worm {
     int getCurrentDirection();
     int chooseDirection();
     void moveToNode(Node* node);
+    bool isHalted();
+    bool isStarved();
+    bool isNType();
+    bool isImpossiblePath();
 
   private:
     std::set<int> _mapConfiguration(int currentDirection);
