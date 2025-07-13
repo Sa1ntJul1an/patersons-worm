@@ -8,6 +8,7 @@
 #include <map>
 #include <utility>
 #include <vector>
+#include "logger.h"
 #include "node.h"
 #include "worm.h"
 
@@ -36,6 +37,8 @@ class Environment {
     const float _lineLength = 20.0;
     float _triangleHeight = (_lineLength * std::sqrt(3.0)) / 2.0;
     const sf::Color _lineColor = sf::Color::White;
+
+    Logger _logger = Logger("environment", 0, false, true, "logs/worm.txt");
 };
 
 

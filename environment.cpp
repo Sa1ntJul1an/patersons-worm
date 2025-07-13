@@ -4,7 +4,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/System/Vector2.hpp>
-#include <iostream>
 #include <vector>
 #include <utility>
 #include "directionUtils.h"
@@ -38,7 +37,7 @@ void Environment::update() {
   /*std::cout << "chosen global direction " << std::to_string(direction) << "\n";*/
   if (direction < 0) {
     // sim has halted
-    std::cout << "Sim halted.\n";
+    _logger.info("Sim halted.");
     return;
   }
 

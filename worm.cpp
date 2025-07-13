@@ -1,5 +1,4 @@
 #include "worm.h"
-#include <iostream>
 #include <queue>
 #include <set>
 #include <string>

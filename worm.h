@@ -37,7 +37,7 @@ class Worm {
     bool _starved;          // starved (no possible paths)
     bool _n_type;           // n-type: no more rules but we have encountered new config (need longer ruleset)
 
-    Logger _logger = Logger("worm", 0, true, true, "logs/worm.txt");
+    Logger _logger = Logger("worm", 0, false, true, "logs/worm.txt");
 };
 
 #endif // !WORM_HEADER
